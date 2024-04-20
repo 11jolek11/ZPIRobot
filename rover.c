@@ -15,11 +15,11 @@ void stoi(int integer, char *buffer)
 
 void left_motor(cJSON *json, float speed)
 {
-    if (speed > 255) {
-        speed = 255;
+    if (speed > 0.5) {
+        speed = 0.5;
     }
-    else if (speed < -255) {
-        speed = -255;
+    else if (speed < -0.5) {
+        speed = -0.5;
     }
 
     cJSON *forT = cJSON_CreateNumber(speed);
@@ -28,11 +28,11 @@ void left_motor(cJSON *json, float speed)
 
 void right_motor(cJSON *json, float speed)
 {
-    if (speed > 255) {
-        speed = 255;
+    if (speed > 0.5) {
+        speed = 0.5;
     }
-    else if (speed < -255) {
-        speed = -255;
+    else if (speed < -0.5) {
+        speed = -0.5;
     }
 
     cJSON *forT = cJSON_CreateNumber(speed);
@@ -47,12 +47,24 @@ char *move(float speed)
 
     cJSON_AddItemToObject(json, "T", forT);
 
-    if (speed > 255) {
-        speed = 255;
-    }
-    else if (speed < -255) {
-        speed = -255;
-    }
+    left_motor(json, speed);
+    right_motor(json, speed);
+
+    char *json_string = cJSON_PrintUnformatted(json);
+    printf("Sent json to serial: %s \n", json_string);
+    cJSON_Delete(json);
+    
+    return json_string;
+}
+
+char *move_int(int speed_int)
+{
+    cJSON *json = cJSON_CreateObject();
+    cJSON *forT = cJSON_CreateNumber(1);
+
+    cJSON_AddItemToObject(json, "T", forT);
+    
+    float speed = (float)speed_int/200;
 
     left_motor(json, speed);
     right_motor(json, speed);
@@ -119,22 +131,3 @@ char *send(char *command)
   return output;
 }
 
-int main()
-{
-  
-  init_serial("/dev/serial0");
-  send(move_sides(1, 0.0, 1, 0.3));
-  usleep(1000000);
-  send(move(0.2));
-  usleep(500000);
-  send(move(0.0));
-  //status();
-  //char buffer[255];
-  //char request[255];
-  //strcpy(request, move(-0.1));
-  //serial_send_and_receive(request, buffer);
-  //cJSON *json = cJSON_Parse(buffer);
-  //char *output = cJSON_PrintUnformatted(json);  
-  serial_close_connection();
-  return 0;
-}
