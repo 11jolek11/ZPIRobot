@@ -58,27 +58,3 @@ int get_raw(int input_pin) {
         return command;
 }
 
-int main() {
-        int ir_pin = 17;
-
-        if (gpioInitialise() < 0) {
-                printf("FAIL");
-                return 1;
-        }
-
-        gpioSetMode(ir_pin, PI_INPUT);
-        gpioSetPullUpDown(ir_pin, PI_PUD_DOWN);
-
-        printf("Started\n");
-        while (running) {
-                //ring_buffer_put(&command_buffer, get_raw(ir_pin));
-                uint32_t command = get_raw(ir_pin);
-
-                if (command < 10) {
-                        printf(" NOISE\n");
-                }
-
-                printf("\n %x \n", command);
-        }
-        //get_raw(ir_pin);
-}

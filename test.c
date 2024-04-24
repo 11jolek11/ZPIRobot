@@ -9,7 +9,7 @@
 #include "libserial.h"
 #include "rover.h"
 #include "decoder.h"
-
+#include "safe_ring_buffer.h"
 // MINUS 1ffc03e
 // PLUS 1ff50ae
 
@@ -49,13 +49,13 @@ int main(int argc, char *argv[])
   init_serial("/dev/serial0");
   //printf("What %s\n", argv[2]);
   char buffer[100];
-  struct ring_buffer command = create_ring_buffer(0);
+  ring_buffer command = create_ring_buffer(32);
   int direction = 1; // 1 - forward -1 - back
   int left_right = 0; // 1 - left -1 - right
+  int counter = 1;
+  for (int i=1; i < 100; ++i){
 
-  for (int i=1; i < argc; ++i){
-
-    int counter = 10000;
+    //int counter = 1;
     while (counter) {
       counter--;
     //   ring_buffer_put(command, get_raw());
@@ -63,14 +63,20 @@ int main(int argc, char *argv[])
         char new_entry[50];
         char c;
         int symbol_counter = 0;
-        while ((c=getchar()) != "\n") {
-            new_entry[symbol_counter] = c;
-            symbol_counter++;
-        }
+        //while ((c=getchar()) != "\0") {
+            //printf("%c\n", c);
+            //new_entry[symbol_counter] = c;
+            //symbol_counter++;
+            //if (c == "\0") {
+          //break;
+        //}
+        //}
+        scanf("%s", new_entry);
+        printf("%s\n", new_entry);
 
-        ring_buffer_put(command, strtol(new_entry, NULL, 16));
+        ring_buffer_put(&command, strtol(new_entry, NULL, 16));
     }
-      uint32_t single_command = ring_buffer_get(command);
+      uint32_t single_command = ring_buffer_get(&command);
       switch (single_command) {
         case FORWARD:
             send(move(SPEED));
