@@ -47,6 +47,15 @@ float faster(float speed)
 int main(int argc, char *argv[])
 {
   init_serial("/dev/serial0");
+  int ir_pin = 17;
+
+  if (gpioInitialise() < 0) {
+	perror("Failed to initialise GPIO %d\n", ir_pin);
+	return 1;
+  }
+
+  gpioSetMode(ir_pin, PI_INPUT);
+  gpioSetPullUpDown(ir_pin, PI_PUD_DOWN);
   //printf("What %s\n", argv[2]);
   char buffer[100];
   ring_buffer command = create_ring_buffer(32);
@@ -58,7 +67,14 @@ int main(int argc, char *argv[])
     //int counter = 1;
     while (counter) {
       counter--;
-    //   ring_buffer_put(command, get_raw());
+    //   ring_buffer_put(command, get_raw(ir_pin));
+    	uint32_t data;
+
+	// Prosty mechanizm filtracji zaklocen
+	// spowodowanych wada konstrukcyjna pilota
+	//if ((data=get_raw(ir_pin)) > 10) {
+	//	ring_buffer_put(command, data);
+	//}
 
         char new_entry[50];
         char c;
@@ -120,6 +136,7 @@ int main(int argc, char *argv[])
 
   send(move(0.0f));
   serial_close_connection();
+  gpioTerminate();
   //int value = stoi(argv[1]);
   //send(move(value));
   return 0;
