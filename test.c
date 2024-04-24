@@ -60,7 +60,15 @@ int main(int argc, char *argv[])
       counter--;
     //   ring_buffer_put(command, get_raw());
 
-        ring_buffer_put(command, getchar());
+        char new_entry[50];
+        char c;
+        int symbol_counter = 0;
+        while ((c=getchar()) != "\n") {
+            new_entry[symbol_counter] = c;
+            symbol_counter++;
+        }
+
+        ring_buffer_put(command, stoi(new_entry, NULL, 16));
     }
       uint32_t single_command = ring_buffer_get(command);
       switch (single_command) {
