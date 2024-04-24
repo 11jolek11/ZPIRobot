@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
             symbol_counter++;
         }
 
-        ring_buffer_put(command, stoi(new_entry, NULL, 16));
+        ring_buffer_put(command, strtol(new_entry, NULL, 16));
     }
       uint32_t single_command = ring_buffer_get(command);
       switch (single_command) {
