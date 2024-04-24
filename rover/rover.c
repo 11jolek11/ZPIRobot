@@ -128,6 +128,7 @@ char *send(char *command)
   serial_send_and_receive(request, buffer);
   cJSON *json = cJSON_Parse(buffer);
   char *output = cJSON_PrintUnformatted(json);
+  cJSON_Delete(json);
   return output;
 }
 
