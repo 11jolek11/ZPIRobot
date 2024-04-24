@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <pigpio.h>
-#include <signal.h>
+#include "./decoder.h"
 
 static int running = 1;
 
