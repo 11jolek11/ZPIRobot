@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
   for (int i=1; i < argc; ++i){
     strcpy(buffer, argv[i]);
     send(move(atof(buffer)));
-    
+
     usleep(500000);
   }
   send(move(0.0f));
