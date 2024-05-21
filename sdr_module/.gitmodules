@@ -1,0 +1,6 @@
+[submodule "modules/liquid-dsp"]
+	path = modules/liquid-dsp
+	url = git@github.com:jgaeddert/liquid-dsp.git
+[submodule "modules/hackrf"]
+	path = modules/hackrf
+	url = git@github.com:greatscottgadgets/hackrf.git
