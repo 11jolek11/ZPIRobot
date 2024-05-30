@@ -121,7 +121,6 @@ char *send(char *command)
 
 int main()
 {
-  
   init_serial("/dev/serial0");
   send(move_sides(1, 0.0, 1, 0.3));
   usleep(1000000);
