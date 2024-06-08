@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Robot Controller</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+<body>
+    <h1>Robot Controller</h1>
+    <label for="modeSwitch">Tryb Automatyczny:</label>
+    <input type="checkbox" id="modeSwitch" onchange="toggleMode(this.checked)"><br><br>
+
+    <div id="manualControls">
+        <div id="videoStreamContainer" style="display:none;">
+            <img id="videoStream" src="stream.mjpeg" alt="Robot Camera Stream">
+        </div>
+        <button onclick="sendCommand('forward')">Przód</button>
+        <button onclick="sendCommand('back')">Tył</button>
+        <button onclick="sendCommand('left')">Lewo</button>
+        <button onclick="sendCommand('right')">Prawo</button>
+        <button onclick="emergencyStop()">STOP</button>
+        <button onclick="changeSpeed(-20)">Zmniejsz prędkość (-20%)</button>
+        <button onclick="changeSpeed(20)">Zwiększ prędkość (+20%)</button>
+        <p>Aktualna prędkość: <span id="speed">0</span>%</p>
+    </div>
+    
+    <div>
+        <h3>Logi:</h3>
+        <ul id="logs"></ul>
+    </div>
+
+    <script>
+        function toggleMode(isAutomatic) {
+            const manualControls = document.getElementById('manualControls').querySelectorAll('button');
+            const videoStreamContainer = document.getElementById('videoStreamContainer');
+            if (isAutomatic) {
+                manualControls.forEach(button => button.disabled = true);
+                videoStreamContainer.style.display = 'none';
+                addToLog('Switched to automatic mode. Manual controls disabled.');
+            } else {
+                manualControls.forEach(button => button.disabled = false);
+                videoStreamContainer.style.display = 'block';
+                addToLog('Switched to manual mode. Manual controls enabled, video stream displayed.');
+            }
+        }
+
+        function sendCommand(command) {
+            console.log('Command sent:', command);
+            addToLog('Command sent: ' + command);
+        }
+
+        function changeSpeed(change) {
+            const speedElement = document.getElementById('speed');
+            let currentSpeed = parseInt(speedElement.textContent);
+            currentSpeed += change;
+            if (currentSpeed > 100) {
+                currentSpeed = 100;
+            } else if (currentSpeed < 0) {
+                currentSpeed = 0;
+            }
+            speedElement.textContent = currentSpeed;
+            console.log('Speed changed to:', currentSpeed + '%');
+            addToLog('Speed changed to: ' + currentSpeed + '%');
+        }
+
+        function emergencyStop() {
+            sendCommand('emergency stop');
+            document.getElementById('speed').textContent = '0';
+            addToLog('Emergency stop activated, speed reset to 0%');
+        }
+
+        function addToLog(message) {
+            const logElement = document.getElementById('logs');
+            const newLog = document.createElement('li');
+            newLog.textContent = message;
+            logElement.appendChild(newLog);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleMode(document.getElementById('modeSwitch').checked);
+        });
+    </script>
+</body>
+</html>
