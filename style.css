@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 20px;
     color: #ffffff;
+    text-align: center;
 }
 
 h1 {
@@ -41,7 +42,7 @@ button {
 }
 
 button:hover {
-    background-color: #00a754;
+    background-color: #76b294;
 }
 
 button:disabled {
@@ -57,11 +58,11 @@ button:disabled {
 }
 
 #logs {
-    background: rgb(0, 0, 0);
+    background: #464646;
     border: 1px solid #ddd;
     list-style-type: none;
     padding: 10px;
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
     margin-top: 20px;
 }

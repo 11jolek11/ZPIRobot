@@ -13,16 +13,30 @@
 
     <div id="manualControls">
         <div id="videoStreamContainer" style="display:none;">
-            <img id="videoStream" src="stream.mjpeg" alt="Robot Camera Stream">
+            <img id="videoStream" src="/" alt="Robot Camera Stream">
         </div>
-        <button onclick="sendCommand('forward')">Przód</button>
-        <button onclick="sendCommand('back')">Tył</button>
-        <button onclick="sendCommand('left')">Lewo</button>
-        <button onclick="sendCommand('right')">Prawo</button>
-        <button onclick="emergencyStop()">STOP</button>
+        <div>
+        <button onclick="sendCommand('forward')">↑</button>    
+        </div>
+        <div>
+        <button onclick="sendCommand('left')">←</button>
+        <button onclick="sendCommand('right')">→</button>    
+        </div>
+        <div>
+        <button onclick="sendCommand('back')">↓</button>    
+        </div>
+        <div>
         <button onclick="changeSpeed(-20)">Zmniejsz prędkość (-20%)</button>
-        <button onclick="changeSpeed(20)">Zwiększ prędkość (+20%)</button>
-        <p>Aktualna prędkość: <span id="speed">0</span>%</p>
+        <button onclick="changeSpeed(20)">Zwiększ prędkość (+20%)</button>  
+        </div>
+        <div>
+        <button onclick="emergencyStop()">STOP</button>
+        </div>
+        
+        
+    </div>
+    <div>
+        <h3>Aktualna prędkość: <span id="speed">0</span>%</h3>
     </div>
     
     <div>
