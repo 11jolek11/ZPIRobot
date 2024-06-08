@@ -7,7 +7,8 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 <body>
-    <h1>Robot Controller</h1>
+    <h1>Robot Controller</h1><hr><br>
+
     <label for="modeSwitch">Tryb Automatyczny:</label>
     <input type="checkbox" id="modeSwitch" onchange="toggleMode(this.checked)"><br><br>
 
@@ -16,29 +17,26 @@
             <img id="videoStream" src="/" alt="Robot Camera Stream">
         </div>
         <div>
-        <button onclick="sendCommand('forward')">↑</button>    
+            <button onclick="sendCommand('forward')">↑</button>    
         </div>
         <div>
-        <button onclick="sendCommand('left')">←</button>
-        <button onclick="sendCommand('right')">→</button>    
+            <button onclick="sendCommand('left')">←</button>
+            <button onclick="sendCommand('right')">→</button>    
         </div>
         <div>
-        <button onclick="sendCommand('back')">↓</button>    
-        </div>
+            <button onclick="sendCommand('back')">↓</button>    
+        </div><br><br>
         <div>
-        <button onclick="changeSpeed(-20)">Zmniejsz prędkość (-20%)</button>
-        <button onclick="changeSpeed(20)">Zwiększ prędkość (+20%)</button>  
+            <button onclick="changeSpeed(-20)">Zmniejsz prędkość (-20%)</button>
+            <button onclick="emergencyStop()">STOP</button>
+            <button onclick="changeSpeed(20)">Zwiększ prędkość (+20%)</button>
         </div>
-        <div>
-        <button onclick="emergencyStop()">STOP</button>
-        </div>
-        
-        
     </div>
+
     <div>
         <h3>Aktualna prędkość: <span id="speed">0</span>%</h3>
-    </div>
-    
+    </div><hr>
+
     <div>
         <h3>Logi:</h3>
         <ul id="logs"></ul>
