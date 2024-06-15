@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Robot Controller</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Controller</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+</head>
 <body>
-    <h1>Robot Controller</h1><hr><br>
+    <h1>Robot Controller</h1>
+    <hr><br>
 
     <label for="modeSwitch">Tryb Automatyczny:</label>
     <input type="checkbox" id="modeSwitch" onchange="toggleMode(this.checked)"><br><br>
@@ -35,7 +38,12 @@
 
     <div>
         <h3>Aktualna prędkość: <span id="speed">0</span>%</h3>
-    </div><hr>
+    </div>
+    <hr>
+
+    <div>
+        <canvas id="myChart" width="800" height="100"></canvas>
+    </div>
 
     <div>
         <h3>Logi:</h3>
@@ -92,6 +100,102 @@
         document.addEventListener('DOMContentLoaded', () => {
             toggleMode(document.getElementById('modeSwitch').checked);
         });
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const dataPoints = {
+            labels: [],
+            datasets: [{
+                label: 'Data Visualization',
+                data: [],
+                borderColor: 'rgba(0, 167, 84, 1)',
+                backgroundColor: 'rgba(0, 167, 84, 0.2)',
+                fill: false,
+                tension: 0.1
+            },
+            {
+                label: 'Peek Points',
+                data: [],
+                backgroundColor: 'rgba(167, 0, 83, 1)',
+                borderColor: 'rgba(167, 0, 83, 1)',
+                pointRadius: 10,
+                fill: false,
+                showLine: false
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: dataPoints,
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                },
+                plugins: {
+                    annotation: {
+                        annotations: []
+                    }
+                }
+            }
+        };
+
+        const myChart = new Chart(ctx, config);
+
+        function updateChart(newData) {
+            const labels = newData.map(row => row[0]);
+            const data = newData.map(row => row[1]);
+
+            dataPoints.labels = labels;
+            dataPoints.datasets[0].data = data;
+            myChart.update();
+        }
+
+        function updatePeekPoints(peekData) {
+            const peekPoints = peekData.map(row => ({ x: row[0], y: row[1] }));
+            dataPoints.datasets[1].data = peekPoints;
+            myChart.options.plugins.annotation.annotations = [];
+            peekPoints.forEach(point => {
+                const annotation = {
+                    type: 'line',
+                    mode: 'vertical',
+                    scaleID: 'x',
+                    value: point.x,
+                    borderColor: 'rgba(167, 0, 83, 1)',
+                    borderWidth: 2
+                };
+                myChart.options.plugins.annotation.annotations.push(annotation);
+            });
+
+            myChart.update();
+        }
+
+        function fetchData() {
+            fetch('data.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    const rows = csvText.split('\n').map(row => row.split(',').map(Number));
+                    updateChart(rows);
+                });
+        }
+
+        function fetchPeekData() {
+            fetch('peek.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    const rows = csvText.split('\n').map(row => row.split(',').map(Number));
+                    updatePeekPoints(rows);
+                });
+        }
+
+        function updateData() {
+            fetchData();
+            fetchPeekData();
+        }
+
+        updateData();
+        setInterval(updateData, 1000);
     </script>
 </body>
 </html>
