@@ -7,13 +7,37 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        .dynamic-button {
+            background-color: #00a754;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dynamic-button:hover {
+            background-color: #76b294;
+        }
+    </style>
 </head>
 <body>
     <h1>Robot Controller</h1>
     <hr><br>
 
     <label for="modeSwitch">Tryb Automatyczny:</label>
-    <input type="checkbox" id="modeSwitch" onchange="toggleMode(this.checked)"><br><br>
+    <div class="checkbox-wrapper-7">
+        <input class="tgl tgl-ios" id="modeSwitch" type="checkbox" onchange="toggleMode(this.checked)">
+        <label class="tgl-btn" for="modeSwitch"></label>
+    </div>
+    <br><br>
 
     <div id="manualControls">
         <div id="videoStreamContainer" style="display:none;">
@@ -41,6 +65,10 @@
     </div>
     <hr>
 
+    <div id="dynamicButtonsContainer">
+    </div>
+    <hr>
+
     <div>
         <canvas id="myChart" width="800" height="100"></canvas>
     </div>
@@ -51,6 +79,29 @@
     </div>
 
     <script>
+        const valueList = [
+            { key: '75', value: 'Częstotliwość 1' },
+            { key: '90', value: 'Częstotliwość 2' },
+            { key: '105', value: 'Częstotliwość 3' }
+        ];
+
+        function createDynamicButtons() {
+            const container = document.getElementById('dynamicButtonsContainer');
+            container.innerHTML = '';
+            valueList.forEach(item => {
+                const button = document.createElement('button');
+                button.textContent = item.value;
+                button.classList.add('dynamic-button');
+                button.onclick = () => sendValue(item.key);
+                container.appendChild(button);
+            });
+        }
+
+        function sendValue(key) {
+            console.log('Value key sent:', key);
+            addToLog('Value key sent: ' + key);
+        }
+
         function toggleMode(isAutomatic) {
             const manualControls = document.getElementById('manualControls').querySelectorAll('button');
             const videoStreamContainer = document.getElementById('videoStreamContainer');
@@ -99,6 +150,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             toggleMode(document.getElementById('modeSwitch').checked);
+            createDynamicButtons();
         });
 
         const ctx = document.getElementById('myChart').getContext('2d');
