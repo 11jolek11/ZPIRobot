@@ -77,6 +77,10 @@
         <ul id="logs"></ul>
     </div>
 
+    <div>
+        <h3>WiFi:</h3>
+        <ul id="wifi"></ul>
+    </div>
     <script>
         const valueList = [
             { key: '75', value: 'Częstotliwość 1' },
@@ -142,6 +146,13 @@
 
         function addToLog(message) {
             const logElement = document.getElementById('logs');
+            const newLog = document.createElement('li');
+            newLog.textContent = message;
+            logElement.appendChild(newLog);
+        }
+
+        function addToWiFi(message) {
+            const logElement = document.getElementById('wifi');
             const newLog = document.createElement('li');
             newLog.textContent = message;
             logElement.appendChild(newLog);
