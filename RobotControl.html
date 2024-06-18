@@ -33,11 +33,10 @@
     <hr><br>
 
     <label for="modeSwitch">Tryb Automatyczny:</label>
-    <div class="checkbox-wrapper-7">
-        <input class="tgl tgl-ios" id="modeSwitch" type="checkbox" onchange="toggleMode(this.checked)">
-        <label class="tgl-btn" for="modeSwitch"></label>
+    <div>  
+        <input type="checkbox" id="modeSwitch" onchange="toggleMode(this.checked)">    
     </div>
-    <br><br>
+    <br>
 
     <div id="manualControls">
         <div id="videoStreamContainer" style="display:none;">
@@ -223,22 +222,44 @@
             myChart.update();
         }
 
+        // function fetchData() {
+        //     fetch('data.csv')
+        //         .then(response => response.text())
+        //         .then(csvText => {
+        //             const rows = csvText.split('\n').map(row => row.split(',').map(Number));
+        //             updateChart(rows);
+        //         });
+        // }
+
+        // function fetchPeekData() {
+        //     fetch('peek.csv')
+        //         .then(response => response.text())
+        //         .then(csvText => {
+        //             const rows = csvText.split('\n').map(row => row.split(',').map(Number));
+        //             updatePeekPoints(rows);
+        //         });
+        // }
+
         function fetchData() {
-            fetch('data.csv')
-                .then(response => response.text())
-                .then(csvText => {
-                    const rows = csvText.split('\n').map(row => row.split(',').map(Number));
+            fetch('http://localhost/hack/ms')
+                .then(response => response.json())
+                .then(data => {
+                    const rawData = data.raw_data;
+                    const rows = rawData.map(item => [item.x, item.y]);
                     updateChart(rows);
-                });
+                })
+                .catch(error => console.error('Error fetching data:', error));
         }
 
         function fetchPeekData() {
-            fetch('peek.csv')
-                .then(response => response.text())
-                .then(csvText => {
-                    const rows = csvText.split('\n').map(row => row.split(',').map(Number));
+            fetch('http://localhost/hack/ms')
+                .then(response => response.json())
+                .then(data => {
+                    const history = data.history;
+                    const rows = history.map(item => [item.x, item.y]);
                     updatePeekPoints(rows);
-                });
+                })
+                .catch(error => console.error('Error fetching peek data:', error));
         }
 
         function updateData() {
@@ -251,3 +272,4 @@
     </script>
 </body>
 </html>
+  
